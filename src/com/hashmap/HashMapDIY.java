@@ -176,16 +176,17 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 	
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("{\n");
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("{\n");
 		for(int i = 0;i < buckets.length;i ++){
-			for(Node<K, V> node = buckets[i];node != null;node.setNext(node.getNext())){
-				stringBuilder.append(node.getKey() + " : " + node.getValue() + "\n");
+			
+			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
+				buffer.append(node.getKey() + " : " + node.getValue() + "\n");
 			}
 		}
 		
-		stringBuilder.append("\n}");
-		return stringBuilder.toString();
+		buffer.append("\n}");
+		return buffer.toString();
 	}
 	
 	
