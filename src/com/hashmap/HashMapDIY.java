@@ -96,12 +96,15 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 		if(key == null)
 			return null;
 		
+		key = (K) key;
 		int hash = hash(key.hashCode());
 		int index = index(hash, buckets.length);
 		
-		for(Node<K, V> node = buckets[index];node.getNext() != null;node.setNext(node.getNext())){
-			if(node.getNext().getHash() == hash && (key == node.getNext().getKey() || key.equals(node.getNext().getKey()))){
-				V value = node.getNext().getValue();
+		System.out.println(">>>>>>>>>>>>>>.." + index);
+		for(Node<K, V>node = buckets[index];node != null;node = node.getNext()){
+			
+			if(node.getHash() == hash && (key == node.getKey() || key.equals(node.getKey()))){
+				V value = node.getValue();
 				node.setNext(node.getNext().getNext());
 				return value;
 			}
@@ -122,7 +125,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public void clear() {
-		size = 0;
+		buckets = null;
 	}
 
 	@Override

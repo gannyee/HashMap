@@ -19,5 +19,6 @@ public class Main {
 		System.out.println("get: " + hashMap.get("003"));
 		hashMap.remove("001");
 		System.out.println("size: " + hashMap.size());
+		System.out.println("hashMap:\n" + hashMap);
 	}
 }
