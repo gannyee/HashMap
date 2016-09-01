@@ -9,16 +9,28 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	private int size = 0;
 	private int capacity = 1;
-	private int initialCapacity = 16;
+	private static final int  DEFAULT_CAPACITY = 16;
+	private static double A = (Math.pow(5, 0.5) - 1) / 2;
 	Node<K, V>[] buckets;
 	
 	public HashMapDIY() {
-		
-		while(capacity < initialCapacity){
-			capacity <<= 1;
-		}
-		buckets = new Node[capacity];
+		this(DEFAULT_CAPACITY);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMapDIY(int capacity){
+		if(capacity <= 0){
+			throw new IllegalArgumentException("capacity can not be negative or zero");
+		}
+		
+		int temp = 1;
+		while(temp < capacity){
+			temp <<= 2;
+		}
+		this.capacity = temp;
+		buckets = new Node[this.capacity];
+	}
+	
 	@Override
 	public int size() {
 		return size;
@@ -96,21 +108,33 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 		if(key == null)
 			return null;
 		
-		key = (K) key;
+		V value = null;
+
 		int hash = hash(key.hashCode());
 		int index = index(hash, buckets.length);
 		
-		System.out.println(">>>>>>>>>>>>>>.." + index);
-		for(Node<K, V>node = buckets[index];node != null;node = node.getNext()){
-			
-			if(node.getHash() == hash && (key == node.getKey() || key.equals(node.getKey()))){
-				V value = node.getValue();
-				node.setNext(node.getNext().getNext());
-				return value;
-			}
+		Node<K, V> node = buckets[index];
+		
+		if(node == null){
+			return null;
 		}
-		size --;
-		return null;
+		
+		if (node.getKey() == key) {
+			buckets[index] = node.getNext();
+			size--;
+		}
+		
+		
+		while (node.getNext() != null) {
+			if (node.getNext().getKey() == key) {
+				value = node.getNext().getValue();
+				node.setNext(node.getNext().getNext());
+				size--;
+				break;
+			}
+			node = node.getNext();
+		}
+		return value;
 	}
 
 	@Override
@@ -163,8 +187,9 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	//hash
 	public int hash(int h){
-		 h ^= (h >>> 20) ^ (h >>> 12);
-		    return h ^ (h >>> 7) ^ (h >>> 4);
+		double temp =  h * A;
+		double digit = temp - Math.floor(temp);
+		return (int) Math.floor(digit * capacity);
 	}
 	
 	//index for buckets

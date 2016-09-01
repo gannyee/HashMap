@@ -4,20 +4,38 @@ public class Main {
 	public static void main(String[] args) {
 		HashMapDIY<String, String> hashMap = new HashMapDIY<>();
 		
-		hashMap.put("001", "asd");
-		hashMap.put("002", "sds");
-		hashMap.put("003", "dvs");
-		hashMap.put("004", "gsa");
-		hashMap.put("005", "oup");
-		hashMap.put("006", "qdn");
-		hashMap.put("007", "zhi");
-		hashMap.put("008", "akr");
-		hashMap.put("009", "uan");
+		hashMap.put("xzczx", "asd");
+		hashMap.put("asdsa", "sds");
+		hashMap.put("asd", "dvs");
+		hashMap.put("asdas", "gsa");
+		hashMap.put("rere", "oup");
+		hashMap.put("asdas", "pzu");
+		hashMap.put("asxas", "sqw");
+		hashMap.put("asred", "cmq");
+		hashMap.put("asdasdq", "adp");
+		hashMap.put("aghrsd", "asd");
+		hashMap.put("hgf", "sds");
+		hashMap.put("aasdsd", "dvs");
+		hashMap.put("ddsf", "gsa");
+		hashMap.put("asd", "oup");
+		hashMap.put("axsczsdas", "pzu");
+		hashMap.put("aassxas", "sqw");
+		hashMap.put("axzcsd", "cmq");
+		hashMap.put("asdasdq", "adp");
+		hashMap.put("xghzczx", "ahgfsd");
+		hashMap.put("asdsa", "sds");
+		hashMap.put("shfgaasd", "dvs");
+		hashMap.put("asdas", "gsa");
+		hashMap.put("cvxvg", "oup");
+		hashMap.put("asdas", "pzu");
+		hashMap.put("dsa", "sqw");
+		hashMap.put("sda", "cmq");
+		hashMap.put("dsa", "adp");
+		
 		System.out.println("hashMap:\n" + hashMap);
 		System.out.println("size: " + hashMap.size());
 		System.out.println("is empty? " + hashMap.isEmpty());
 		System.out.println("get: " + hashMap.get("003"));
-		hashMap.remove("001");
 		System.out.println("size: " + hashMap.size());
 		System.out.println("hashMap:\n" + hashMap);
 	}
