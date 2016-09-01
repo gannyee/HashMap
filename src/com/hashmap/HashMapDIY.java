@@ -46,22 +46,26 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 		if(key == null || buckets.length == 0)
 			return false;
 		
-		Iterator<K> iterator = keySet().iterator();
-		if(iterator.hasNext()){
-			K k = iterator.next();
-			if(k.equals(key) || k == key)
+		int hash = hash(key.hashCode());
+		int index = index(hash, buckets.length);
+		
+		for(Node<K, V> node = buckets[index];node != null;node = node.getNext()){
+			if(node.getHash() == hash && (key == node.getKey() || key.equals(node.getKey()))){
 				return true;
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		Iterator<V> iterator = values().iterator();
-		if(iterator.hasNext()){
-			V v = iterator.next();
-			if(v.equals(value) || v == value)
-				return true;
+
+		for(Node<K, V> node : buckets){
+			for(;node != null;node = node.getNext()){
+				if(node.getValue().equals(value) || node.getValue() == value){
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -74,7 +78,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 		int hash = hash(key.hashCode());
 		int index = index(hash, buckets.length);
 		
-		for(Node<K, V> node = buckets[index];node != null;node.setNext(node.getNext())){
+		for(Node<K, V> node = buckets[index];node != null;node = node.getNext()){
 			if(node.getHash() == hash && (key == node.getKey() || key.equals(node.getKey()))){
 				return node.getValue();
 			}
@@ -91,13 +95,14 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 		int hash = hash(key.hashCode());
 		int index = index(hash, buckets.length);
 		
-		for(Node<K, V> node = buckets[index];node != null;node.setNext(node.getNext())){
+		for(Node<K, V> node = buckets[index];node != null;node = node.getNext()){
 			if(node.getHash() == hash && (key == node.getKey() || key.equals(node.getKey()))){
 				V oldValue = node.getValue();
 				node.setValue(value);
 				return oldValue;
 			}
 		}
+		
 		addEntry(hash, key, value, index);
 		size ++;
 		return null;
@@ -149,14 +154,19 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public void clear() {
-		buckets = null;
+		if(buckets != null && size > 0){
+			size = 0;
+			for(int i = 0;i < buckets.length;i ++){
+				buckets[i] = null;
+			}
+		}
 	}
 
 	@Override
 	public Set<K> keySet() {
 		Set<K> keySet = null;
 		for(int i = 0;i < buckets.length;i ++){
-			for(Node<K, V> node = buckets[i];node != null;node.setNext(node.getNext())){
+			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				keySet.add(node.getKey());
 			}
 		}
@@ -167,7 +177,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 	public Collection<V> values() {
 		Collection<V> values = null;
 		for(int i = 0;i < buckets.length;i ++){
-			for(Node<K, V> node = buckets[i];node != null;node.setNext(node.getNext())){
+			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				values.add(node.getValue());
 			}
 		}
@@ -178,7 +188,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
 		Set<java.util.Map.Entry<K, V>> entrySet = null;
 		for(int i = 0;i < buckets.length;i ++){
-			for(Node<K, V> node = buckets[i];node != null;node.setNext(node.getNext())){
+			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				entrySet.add(node);
 			}
 		}
@@ -199,6 +209,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 	
 	private void addEntry(int hash,K key,V value,int index){
 		Node<K, V> node = buckets[index];
+		
 		buckets[index] = new Node<K,V>(hash,key,value,node);
 	}
 	
@@ -206,14 +217,15 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{\n");
+		
 		for(int i = 0;i < buckets.length;i ++){
 			
 			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
-				buffer.append(node.getKey() + " : " + node.getValue() + "\n");
+				buffer.append("	" + node.getKey() + " : " + node.getValue() + "\n");
 			}
 		}
 		
-		buffer.append("\n}");
+		buffer.append("}");
 		return buffer.toString();
 	}
 	
