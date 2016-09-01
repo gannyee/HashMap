@@ -1,6 +1,8 @@
 package com.hashmap;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -144,10 +146,10 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
-		Iterator<?> iterator = m.entrySet().iterator();
-		if(iterator.hasNext()){
-			Node<K, V> node = (Node<K, V>) iterator.next();
-			put(node.getKey(), node.getValue());
+		Iterator<? extends K> iterator = m.keySet().iterator();
+		while(iterator.hasNext()){
+			K k = iterator.next();
+			put(k, m.get(k));
 		}
 		
 	}
@@ -164,7 +166,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public Set<K> keySet() {
-		Set<K> keySet = null;
+		Set<K> keySet = new HashSet<>();
 		for(int i = 0;i < buckets.length;i ++){
 			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				keySet.add(node.getKey());
@@ -175,7 +177,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public Collection<V> values() {
-		Collection<V> values = null;
+		Collection<V> values = new ArrayList<V>();
 		for(int i = 0;i < buckets.length;i ++){
 			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				values.add(node.getValue());
@@ -186,7 +188,7 @@ public class HashMapDIY<K,V> implements Map<K, V>{
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		Set<java.util.Map.Entry<K, V>> entrySet = null;
+		Set<java.util.Map.Entry<K, V>> entrySet = new HashSet<Map.Entry<K,V>>();
 		for(int i = 0;i < buckets.length;i ++){
 			for(Node<K, V> node = buckets[i];node != null;node = node.getNext()){
 				entrySet.add(node);
